@@ -1,49 +1,28 @@
-name: .NET Core Desktop
+name: Build .NET Framework
 
 on:
   push:
-    branches: [ "master" ]
-  pull_request:
-    branches: [ "master" ]
+    branches:
+      - master
 
 jobs:
+  build:
+    runs-on: windows-latest
 
-  build:  
-    runs-on: windows-latest 
-
-    env:
-      Solution_Name: ConsoleApp1.sln                        # Replace with your solution name, i.e. MyWpfApp.sln.
-     
     steps:
-    - name: Checkout
-      uses: actions/checkout@v4
-      with:
-        fetch-depth: 0
+    - name: Checkout code
+      uses: actions/checkout@v2
 
-    # Install the .NET Core workload
-    - name: set up .NET 
-      uses: actions/setup-dotnet@v4
+    - name: Set up .NET Framework
+      uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: '4.7.2' 
-    - name: Install dependencies
+        dotnet-version: '4.x'
+
+    - name: Restore NuGet packages
       run: dotnet restore
-            
+
     - name: Build
-      run: dotnet build -c Release --no-restore
+      run: dotnet build --configuration Release --no-restore
 
-   
-    - name: Setup MSBuild.exe
-      uses: microsoft/setup-msbuild@v2
-
-   
-
-   
-
-
-
-
-   
-
-
-
- 
+    - name: Run tests
+      run: dotnet test --no-restore --verbosity normal

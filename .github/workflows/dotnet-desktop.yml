@@ -2,7 +2,7 @@ name: .NET Core Build
 on:
   push:
     branches:
-      - main 
+      - master 
 jobs:
   publish:
     name: build, pack, test & publish

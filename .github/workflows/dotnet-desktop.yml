@@ -16,6 +16,4 @@ jobs:
 
       - name: Restore, Build, test, and pack
         uses: ConsoleApp1/build-dotnet@main
-        with:
-          TEST: true
-          PACK: true
+        

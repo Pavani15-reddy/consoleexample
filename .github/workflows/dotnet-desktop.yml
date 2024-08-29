@@ -1,28 +1,37 @@
-name: Build .NET Framework
+name: ConsoleApp1 Build
 
 on:
   push:
-    branches:
-      - master
+    branches: master
 
 jobs:
   build:
     runs-on: windows-latest
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
+    - uses: actions/checkout@v2
+    
+    - name: Setup MSBuild
+      uses: microsoft/setup-msbuild@v1
 
-    - name: Set up .NET Framework
-      uses: actions/setup-dotnet@v4
+    - name: Setup NuGet
+      uses: NuGet/setup-nuget@v1.0.2
+      
+    - name: Navigate to Workspace
+      run: cd $GITHUB_WORKSPACE
+
+    - name: Create Build Directory
+      run: mkdir _build
+      
+    - name: Restore Packages
+      run: nuget restore ConsoleApp1.sln
+
+    - name: Build Solution
+      run: |
+        msbuild.exe ConsoleApp1.sln /nologo /nr:false /p:DeployOnBuild=true /p:DeployDefaultTarget=WebPublish /p:WebPublishMethod=FileSystem /p:DeleteExistingFiles=True /p:platform="Any CPU" /p:configuration="Release" /p:PublishUrl="../_build"
+        
+    - name: Upload artifact
+      uses: actions/upload-artifact@v1.0.0
       with:
-        dotnet-version: '4.7.2'
-
-    - name: Restore NuGet packages
-      run: dotnet restore
-
-    - name: Build
-      run: dotnet build --configuration Release --no-restore
-
-    - name: Run tests
-      run: dotnet test --no-restore --verbosity normal
+        name: ConsoleApp1
+        path: "./_build"        

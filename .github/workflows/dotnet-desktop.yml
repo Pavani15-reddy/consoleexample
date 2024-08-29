@@ -1,37 +1,21 @@
-name: ConsoleApp1 Build
-
+name: .NET Core Build
 on:
   push:
-    branches: master
-
+    branches:
+      - main 
 jobs:
-  build:
-    runs-on: windows-latest
-
-    steps:
-    - uses: actions/checkout@v2
+  publish:
+    name: build, pack, test & publish
+    runs-on: ubuntu-latest
     
-    - name: Setup MSBuild
-      uses: microsoft/setup-msbuild@v1
+    steps:
+      - uses: actions/checkout@main
 
-    - name: Setup NuGet
-      uses: NuGet/setup-nuget@v1.0.2
-      
-    - name: Navigate to Workspace
-      run: cd $GITHUB_WORKSPACE
+      - name: Install latest .NET SDK
+        uses: ConsoleApp1/setup-latest-dotnet@main
 
-    - name: Create Build Directory
-      run: mkdir _build
-      
-    - name: Restore Packages
-      run: nuget restore ConsoleApp1.sln
-
-    - name: Build Solution
-      run: |
-        msbuild.exe ConsoleApp1.sln /nologo /nr:false /p:DeployOnBuild=true /p:DeployDefaultTarget=WebPublish /p:WebPublishMethod=FileSystem /p:DeleteExistingFiles=True /p:platform="Any CPU" /p:configuration="Release" /p:PublishUrl="../_build"
-        
-    - name: Upload artifact
-      uses: actions/upload-artifact@v1.0.0
-      with:
-        name: ConsoleApp1
-        path: "./_build"        
+      - name: Restore, Build, test, and pack
+        uses: ConsoleApp1/build-dotnet@main
+        with:
+          TEST: true
+          PACK: true

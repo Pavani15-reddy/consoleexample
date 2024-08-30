@@ -23,7 +23,7 @@ jobs:
         run: nuget restore ConsoleApp1.sln
 
       - name: Build App
-        run: msbuild ConsoleApp1/ConsoleApp1.sln
+        run: msbuild ConsoleApp1/ConsoleApp1.csproj
       
    
 

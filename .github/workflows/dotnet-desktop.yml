@@ -14,13 +14,8 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Set up MSBuild
-        uses: microsoft/setup-msbuild@v1 
-        
-      - name: .NetFramework Action Template
-        uses: auycro/netframework-action-template@v0.0.2
-        with:
-          dotnet-version: '4.7.2'
-        
+        uses: microsoft/setup-msbuild@v1        
+             
       - name: setup Nuget
         uses: Nuget/setup-nuget@v1.0.5
         
@@ -28,7 +23,7 @@ jobs:
         run: nuget restore ConsoleApp1.sln
 
       - name: Build App
-        run: msbuild ConsoleApp1/ConsoleApp1.csproj
+        run: msbuild ConsoleApp1/ConsoleApp1.sln
       
    
 
